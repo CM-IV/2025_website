@@ -1,6 +1,5 @@
 import { defineConfig } from 'astro/config'
 
-import mdx from '@astrojs/mdx'
 import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
 import icon from 'astro-icon'
@@ -21,7 +20,10 @@ import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  site: 'https://astro-erudite.vercel.app',
+  image: {
+    domains: ['ik.imagekit.io'],
+  },
+  site: 'https://home.civdev.xyz',
   integrations: [
     expressiveCode({
       themes: ['github-light', 'github-dark'],
@@ -66,7 +68,6 @@ export default defineConfig({
         uiFontFamily: 'var(--font-sans)',
       },
     }),
-    mdx(),
     react(),
     sitemap(),
     icon(),

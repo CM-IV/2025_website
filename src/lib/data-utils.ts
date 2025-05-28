@@ -4,7 +4,7 @@ export async function getAllPosts(): Promise<CollectionEntry<'blog'>[]> {
   const posts = await getCollection('blog')
   return posts
     .filter((post) => !post.data.draft)
-    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+    .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
 }
 
 export async function getRecentPosts(
@@ -73,7 +73,7 @@ export function groupPostsByYear(
 ): Record<string, CollectionEntry<'blog'>[]> {
   return posts.reduce(
     (acc: Record<string, CollectionEntry<'blog'>[]>, post) => {
-      const year = post.data.date.getFullYear().toString()
+      const year = post.data.publishDate.getFullYear().toString()
       ;(acc[year] ??= []).push(post)
       return acc
     },

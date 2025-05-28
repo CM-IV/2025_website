@@ -3,28 +3,28 @@ import { defineCollection, z } from 'astro:content'
 
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
-  schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      description: z.string(),
-      date: z.coerce.date(),
-      image: image().optional(),
-      tags: z.array(z.string()).optional(),
-      authors: z.array(z.string()).optional(),
-      draft: z.boolean().optional(),
+  schema: z.object({
+    draft: z.boolean(),
+    title: z.string(),
+    snippet: z.string(),
+    image: z.object({
+      src: z.string(),
+      alt: z.string(),
     }),
+    publishDate: z.string().transform((str) => new Date(str)),
+    authors: z.array(z.string()).optional(),
+    category: z.string(),
+    tags: z.array(z.string()),
+  }),
 })
 
 const authors = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/authors' }),
   schema: z.object({
     name: z.string(),
-    pronouns: z.string().optional(),
     avatar: z.string().url().or(z.string().startsWith('/')),
     bio: z.string().optional(),
     mail: z.string().email().optional(),
-    website: z.string().url().optional(),
-    twitter: z.string().url().optional(),
     github: z.string().url().optional(),
     linkedin: z.string().url().optional(),
     discord: z.string().url().optional(),

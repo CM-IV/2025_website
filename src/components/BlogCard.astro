@@ -14,7 +14,7 @@ interface Props {
 }
 
 const { entry } = Astro.props
-const formattedDate = formatDate(entry.data.date)
+const formattedDate = formatDate(entry.data.publishDate)
 const readTime = readingTime(entry.body!)
 const authors = await parseAuthors(entry.data.authors ?? [])
 ---
@@ -30,7 +30,7 @@ const authors = await parseAuthors(entry.data.authors ?? [])
       entry.data.image && (
         <div class="max-w-3xs sm:shrink-0">
           <Image
-            src={entry.data.image}
+            src={entry.data.image.src}
             alt={entry.data.title}
             width={1200}
             height={630}
@@ -42,7 +42,7 @@ const authors = await parseAuthors(entry.data.authors ?? [])
 
     <div class="grow">
       <h3 class="mb-1 text-lg font-medium">{entry.data.title}</h3>
-      <p class="text-muted-foreground mb-2 text-sm">{entry.data.description}</p>
+      <p class="text-muted-foreground mb-2 text-sm">{entry.data.snippet}</p>
 
       <div
         class="text-muted-foreground mb-2 flex flex-wrap items-center gap-x-2 text-xs"

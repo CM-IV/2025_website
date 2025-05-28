@@ -108,3 +108,141 @@
     @apply transition-none!;
   }
 }
+
+/* Enhanced typewriter effect with smoother animations */
+.typewriter-container {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5em;
+  line-height: 1.5;
+  position: relative;
+}
+
+.typewriter-text {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: middle;
+  animation: typing 3.5s cubic-bezier(0.44, 0.94, 0.52, 0.95);
+  position: relative;
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: currentColor;
+  margin-left: 2px;
+  animation: blink-caret 0.85s step-end infinite;
+  vertical-align: middle;
+  transform: translateY(-1px);
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Floating circuit elements */
+.circuit-element {
+  position: absolute;
+  opacity: 0.1;
+  z-index: 1;
+  filter: blur(0.5px);
+}
+
+.dark .circuit-element {
+  opacity: 0.15;
+  filter: blur(0.5px) brightness(0.8);
+}
+
+/* Animated skill tags */
+.skill-tag {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.skill-tag:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.skill-tag::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: all 0.5s ease;
+}
+
+.skill-tag:hover::before {
+  left: 100%;
+}
+
+/* Animated gradient title */
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-title {
+  background-size: 200% 200%;
+  animation: gradientFlow 6s ease infinite;
+}
+
+/* Card hover effects */
+.blog-card {
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.blog-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 20px -10px rgba(0, 0, 0, 0.1);
+}
+
+.dark .blog-card:hover {
+  box-shadow: 0 12px 20px -10px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}

@@ -45,10 +45,11 @@ const authors = await parseAuthors(post.data.authors ?? [])
     {
       post.data.image && (
         <Image
-          src={post.data.image}
+          src={post.data.image.src}
           alt={post.data.title}
           width={1200}
           height={630}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
           class="col-span-full mx-auto w-full max-w-5xl object-cover"
         />
       )
@@ -96,7 +97,7 @@ const authors = await parseAuthors(post.data.authors ?? [])
             )
           }
           <div class="flex items-center gap-2">
-            <span>{formatDate(post.data.date)}</span>
+            <span>{formatDate(post.data.publishDate)}</span>
             <Separator orientation="vertical" className="h-4!" />
             <span>{readingTime(post.body!)}</span>
           </div>

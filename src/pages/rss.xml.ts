@@ -13,8 +13,8 @@ export async function GET(context: APIContext) {
       site: context.site ?? SITE.href,
       items: posts.map((post) => ({
         title: post.data.title,
-        description: post.data.description,
-        pubDate: post.data.date,
+        description: post.data.snippet,
+        pubDate: post.data.publishDate,
         link: `/blog/${post.id}/`,
       })),
     })
