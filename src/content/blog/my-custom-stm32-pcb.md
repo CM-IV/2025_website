@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 title: "Design to Debug: Building a Custom STM32 PCB"
 snippet: "A comprehensive walkthrough of designing, assembling, and validating a custom STM32F103 board using KiCAD"
 image:
@@ -13,7 +13,7 @@ tags: [stm32f103c8, KiCAD, PCBDesign, EmbeddedSystems, Debugging]
 
 ## Introduction
 
-A few months ago, my embedded systems experience was limited to collecting temperature and accelerometer data on an ESP32-C3 dev board using Rust. Coming from a computer science background, I had written plenty of C++ code and JavaScript in my first jobs out of college, but hardware always felt like a black box—until I decided to pry it open. Rust’s strict compiler and fearless concurrency made embedded development less intimidating; I no longer worried about corrupting memory with bad pointers or deadlocking my ISRs. However, working with pre-built development boards only showed me half the picture.
+A few months ago, my embedded systems experience was limited to collecting temperature and accelerometer data on an ESP32-C3 dev board using Rust. Coming from a computer science background, I had written plenty of C++ code and JavaScript in my first jobs out of college, but aside from school studies I didn't know much about the hardware side of things. I noticed the ESP32-C3-DevKit-RUST-1 dev board and decided try it out, but working with pre-built development boards only showed me half the picture.
 
 I wanted to understand the *why* behind the hardware: Why does I²C require pull-up resistors? Why does my carefully written Rust code fail when the PCB layout is flawed? To answer these questions, I embarked on designing my own 2-layer STM32F103 breakout board in KiCAD 9 (on GNU/Linux, of course). The board includes pinouts for SWD, UART, I²C, and GPIO. This journey was a crash course in humility, teaching me that schematic optimism is no match for LCSC’s inventory constraints. Footprint reviews and BOM checks aren’t just best practices—they’re the difference between a functional PCB and hours of frustration with a soldering iron.
 
@@ -57,7 +57,7 @@ Here, $C_{stray}$ accounts for stray capacitance, typically around 5pF. For opti
 
 ### Pinout Design
 
-The pinout includes connections for SWD, UART, I²C, and GPIO. Each pin is labeled clearly in the schematic to simplify PCB layout and firmware development.  I moved the USART pinouts from their original spot near the USB pin to where they are in the image near the BOOT0 pin.  Proper pinout design by using STM32CubeIDE ensures compatibility with debugging tools and external peripherals, not to mention an easier time with making the schematic with peripheral pin-outs in the first place.
+The pinout includes connections for SWD, UART, I²C, and GPIO. Each pin is labeled clearly in the schematic to simplify PCB layout and firmware development.  I moved the USART pinouts from their original spot near the USB pin to where they are in the image near the BOOT0 pin.  The two pins for the USB differential pair are pinned out to PA11 and PA13, with the SWD pins are at PA13 and PA14.  Proper pinout design by using STM32CubeIDE ensures compatibility with debugging tools and external peripherals, not to mention an easier time with making the schematic with peripheral pin-outs in the first place.
 
 ![Pinout](https://i.postimg.cc/Y26TtY65/pinout.png)
 
@@ -65,13 +65,17 @@ The pinout includes connections for SWD, UART, I²C, and GPIO. Each pin is label
 
 ![PCB Image](https://i.postimg.cc/HWwfFGWm/pcb-layout.webp)
 
-The schematic design so far has gotten us to this point, where we route the traces and place  the components on the PCB itself.
+The schematic design so far has gotten us to this point, where we route the traces and place the components on the PCB itself.  The power supply and step-down from 5V to 3V3 lives on the right side of the PCB with the necessary capacitors net labeled C12 and C13.  The HSE labeled Y1 has its required capacitors in close proximity, those are labeled C10 and C11.  The rest of the ceramic decoupling capacitors are very close to the IC power pins and allow the device to function as intended.
+
+There are four male headers for the GPIO, SWD, I2C, and UART pins. I'll be able to use jumper wires with a breadboard to do testing and debug the software.  3V3 power is routed to each of these headers with a corresponding ground pin.  The I2C header in particular has 1k5 pull-up resistors so that the logic level is 3V3, it will be at that voltage when no data is being transferred.  I'll probably make a bi-directional level converter to use here later so that it can properly use a 5V powered device.
 
 ---
 
 ## Assembly
 
 Once the design was finalized, I exported the Gerber files from KiCAD and sent them to JLCPCB for manufacturing. JLCPCB offers affordable PCB fabrication and assembly services, making it an excellent choice for prototyping. However, I learned the hard way that even with professional assembly services, attention to detail during the design and BOM preparation stages is crucial to avoid headaches later.
+
+![no usb](https://i.ibb.co/DPk8sZwD/no-usb.webp)
 
 ### Double-Checking the BOM and Parts
 
@@ -108,9 +112,6 @@ Before sending your design to JLCPCB, use this checklist to ensure a smooth asse
 4. **Cross-Reference the BOM:** Confirm that all components are available in JLCPCB's inventory or plan for manual soldering.
 5. **Generate Assembly Files:** Export the pick-and-place file and assembly drawings to guide JLCPCB during the manufacturing process.
 
----
-
-While manual soldering was initially a setback, it taught me valuable lessons about the importance of preparation and adaptability. It also underscored the need for designing PCBs with assembly in mind. For example, ensuring that footprints are accessible can make manual soldering much easier when needed.
 
 ---
 
@@ -128,7 +129,7 @@ Designing a custom PCB is as much about planning as it is about execution. Here 
 With the basic STM32F103 breakout board complete, I plan to:
 
 1. **Expand Functionality:** Add features like SPI and CAN bus for more advanced projects in a later board revision.
-2. **Optimize Layout:** Experiment with 4-layer PCBs for better signal integrity.
+2. **ESD Protection:** Add and place correctly components that mitigate elecrostatic discharge.
 3. **Develop Firmware:** Write reusable libraries for peripherals in Rust.
 
-Stay tuned for updates as I dive deeper into embedded systems design!
+Stay tuned for updates and the first Rust program that I flash to the device!
